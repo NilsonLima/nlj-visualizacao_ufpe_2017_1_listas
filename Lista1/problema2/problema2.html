@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>problema2</title>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+    </head>
+    <body>
+    	<script type="text/javascript">
+          var margin = {top: 10, bottom: 10, left: 10, right: 10};
+          var width = 850 - margin.left - margin.right;
+          var height = 550 - margin.top - margin.bottom;
+          var dataset = createDataset(getRandomInt(10, 51));
+
+          var xScale = d3.scaleLinear( )
+                         .domain([0, d3.max(dataset, function(d){ return d[0]; })])
+                         .rangeRound([0, width]);
+
+          var yScale = d3.scaleLinear( )
+                         .domain([0, d3.max(dataset, function(d){ return d[1]; })])
+                         .rangeRound([height, 0]);
+
+          var rScale = d3.scaleLinear( )
+                         .domain([0, d3.max(dataset, function(d){ return d[2]; })])
+                         .rangeRound([3, 6]);
+
+          var cScale = d3.scaleLinear( )
+                         .domain([0, d3.max(dataset, function(d){ return d[3]; })])
+                         .range(["black", "blue"]);
+
+          var _svg = d3.select("body")
+                       .append("svg")
+                       .attr("width", width + margin.left + margin.right)
+                       .attr("height", height + margin.top + margin.bottom);
+
+          var mainGroup = _svg.append("g")
+                              .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+          mainGroup.selectAll("circle")
+                   .data(dataset)
+                   .enter( )
+                   .append("circle")
+                   .attr("cx", function(d){ return xScale(d[0]); })
+                   .attr("cy", function(d){ return yScale(d[1]); })
+                   .attr("r", function(d){ return rScale(d[2]); })
+                   .attr("fill", function(d){ return cScale(d[3]); })
+
+         //generates a random dataset where each element is of dimension [x, y, z, w]
+         function createDataset(npoints){
+            var array = new Array(npoints);
+
+            for(var i = 0; i < npoints; i++){
+                //generates four data points between 0 and 100
+                var x = getRandomInt(0, 101);
+                var y = getRandomInt(0, 101);
+                var z = getRandomInt(0, 101);
+                var w = getRandomInt(0, 101);
+
+                array[i] = [x, y, z, w];
+            }
+
+            return array;
+         }
+
+         //generates a random number like this [min, max)
+         function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min)) + min;
+         }
+    	</script>
+    </body>
+</html>
