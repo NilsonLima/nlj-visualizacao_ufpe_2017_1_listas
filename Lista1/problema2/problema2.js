@@ -43,7 +43,7 @@ function createPlot(dataset, npoints, svgwidth, svgheight){
                      .domain([0, d3.max(dataset, function(d){ return d[3]; })])
                      .range(["black", "blue"]);
 
-      //creates both x and y axis
+      //creates x and y axis
       var xAxis = d3.axisBottom( )
                     .scale(xScale);
 
@@ -75,7 +75,7 @@ function createPlot(dataset, npoints, svgwidth, svgheight){
           .attr("font-size", 20)
           .text(npoints);
 
-      //instantiates an svg group object where the dataset lies on the screen
+      //instantiates an svg group object where the dataset lies on screen
       // and insert data points
       _svg.append("g")
           .attr("transform", "translate(" + margin.horizontal + "," + margin.vertical + ")")
@@ -106,7 +106,7 @@ function createDataset(npoints){
   return array;
 }
 
-//generates a random number like this [min, max)
+//generates a random number like [min, max)
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
