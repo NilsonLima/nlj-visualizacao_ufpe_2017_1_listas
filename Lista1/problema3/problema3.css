@@ -1,0 +1,15 @@
+.yAxis line{
+  stroke: lightgray;
+}
+
+.yAxis path{
+  stroke: white;
+}
+
+.xAxis line{
+  stroke: white;
+}
+
+.xAxis path{
+  stroke: white;
+}
