@@ -24,7 +24,7 @@ function createPlot(dataset, npoints, svgwidth, svgheight){
       var margin = {vertical: 40, horizontal: 40};
       var width = svgwidth - 2 * margin.horizontal;
       var height = svgheight - 2 * margin.vertical;
-      var rPadding = 6;
+      var rPadding = 8;
 
       //creates scales for x and y position, radius r and color from black to blue
       var xScale = d3.scaleLinear( )
@@ -37,11 +37,11 @@ function createPlot(dataset, npoints, svgwidth, svgheight){
 
       var rScale = d3.scaleLinear( )
                      .domain([0, d3.max(dataset, function(d){ return d[2]; })])
-                     .rangeRound([3, 6]);
+                     .rangeRound([3, 8]);
 
       var cScale = d3.scaleLinear( )
                      .domain([0, d3.max(dataset, function(d){ return d[3]; })])
-                     .range(["black", "blue"]);
+                     .range(["gray", "blue"]);
 
       //creates x and y axis
       var xAxis = d3.axisBottom( )
@@ -91,22 +91,22 @@ function createPlot(dataset, npoints, svgwidth, svgheight){
 
 //generates a random dataset where each element is of dimension [x, y, z, w]
 function createDataset(npoints){
-  var array = new Array(npoints);
+    var array = new Array(npoints);
 
-  for(var i = 0; i < npoints; i++){
-      //generates four data points between 0 and 100
-      var x = getRandomInt(0, 101);
-      var y = getRandomInt(0, 101);
-      var z = getRandomInt(0, 101);
-      var w = getRandomInt(0, 101);
+    for(var i = 0; i < npoints; i++){
+        //generates four data points between 0 and 100
+        var x = getRandomInt(0, 101);
+        var y = getRandomInt(0, 101);
+        var z = getRandomInt(0, 101);
+        var w = getRandomInt(0, 101);
 
-      array[i] = [x, y, z, w];
-  }
+        array[i] = [x, y, z, w];
+    }
 
-  return array;
+    return array;
 }
 
 //generates a random number like [min, max)
 function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min)) + min;
+    return Math.floor(Math.random() * (max - min)) + min;
 }
