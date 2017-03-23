@@ -7,20 +7,27 @@
     </head>
     <body>
     	<script type="text/javascript">
-        var size = {width:600, height:390};
-        var blueframe = {width: 270, height: 210};
-        var bars = [[0, 0], [1, 1], [0, 2], [1, 3], [0, 4], [1, 5], [0, 6],
-                    [1, 7], [0, 8], [1, 9], [0, 10], [1, 11], [0, 12]];
-        var padding = 30;
+        var size = {width:600, height:351}; //flags dimensions
+        var blueframe = {width: 275, height: 189}; //american blue rectangle dimensions
+        var stars_margin = {h: 20, v: 20}; //stars padding
 
+        //creates bars and stars auxiliary datasets
+        var bars = genBars( );
         var stars = genStars( );
 
-        var _g1 = d3.select("body")
+        //creates svg object
+        var _svg = d3.select("body")
                      .append("svg")
                      .attr("width", size.width)
-                     .attr("height", 2 * size.height)
-                     .append("g");
+                     .attr("height", 2 * size.height);
 
+        //American flag
+        //-------------------------------------------------------
+
+        //american flag group
+        var _g1 = _svg.append("g");
+
+        //draw red and white bars
         _g1.append("g")
             .selectAll("rect")
             .data(bars)
@@ -29,81 +36,147 @@
             .attr("width", size.width)
             .attr("height", (size.height / 13))
             .attr("x", 0)
-            .attr("y", function(d){ return d[1] * (size.height / 13); })
-            .attr("fill", function(d){ return getColor(d[0]); });
+            .attr("y", function(d){ return d[0] * (size.height / 13); })
+            .attr("fill", function(d){ return getColor("#B32134", "white", d[1]); });
 
-        _g1.append("g")
-            .append("rect")
+        //draw blue rectangle
+        _g1.append("rect")
+            .attr("x", 0)
+            .attr("y", 0)
             .attr("width", blueframe.width)
             .attr("height", blueframe.height)
-            .attr("fill", "blue");
+            .attr("fill", "#3B3B6D");
 
+        //draw stars
         _g1.append("g")
-            .selectAll("text")
+            .attr("transform", "translate(" + stars_margin.h + "," + stars_margin.v + ")")
+            .selectAll(".symbol")
             .data(stars)
             .enter( )
-            .append("text")
-            .attr("x", 10)
-            .attr("y", function(d){ return ((blueframe.height * d[0])/ 5 + 27); })
-            .attr("font-size", 22 )
-            .html(function(d){ return d[1]; })
-            .attr("fill", "white");
+            .append("path")
+            .attr("transform", function(d){ return "translate(" + (29 * d[0]) + "," + (15 * d[1]) + ") scale(1.5)"; })
+            .attr("d", d3.symbol( ).type(d3.symbolStar))
+            .attr("fill", function(d, i){ return getColor("white", "transparent", d[2]); })
 
-        var _g2 = d3.select("svg")
-                    .append("g")
-                    .attr("transform", "translate(0," + size.height + ")")
+        //Brazilian flag
+        //------------------------------------------------------------------------
+        var diamond_margin = {h: 50, v: 30}; //brazilian yellow diamond padding
+        var radius = 95; //blue circle radius
 
+        //brazilian flag group
+        var _g2 = _svg.append("g")
+                      .attr("transform", "translate(0," + size.height + ")");
+
+        //draw background rectangle
         _g2.append("rect")
            .attr("width", size.width)
            .attr("height", size.height)
-           .attr("fill", "green");
+           .attr("fill", "forestgreen");
 
-        _g2.append("g")
-           .attr("transform", "translate(" + padding + ","  + padding + ")")
-           .append("path")
-           .attr("d", "M 0 " + ((size.height - 2 * padding) / 2) + " " +
-                      "L " + ((size.width - 2 * padding) / 2) + " 0" + " " +
-                      "L " +  (size.width - 2 * padding) + " " +
-                              ((size.height - 2 * padding) / 2) + " " +
-                      "L " +  ((size.width - 2 * padding) / 2) + " " +
-                              (size.height - 2 * padding) + " z")
-            .attr("fill", "yellow");
+        //draw diamond
+        _g2.append("path")
+           .attr("transform", "translate(" + diamond_margin.h + ","  + diamond_margin.v + ")")
+           .attr("d", "M 0 " + ((size.height - 2 * diamond_margin.v) / 2) + " " +
+                      "L " + ((size.width - 2 * diamond_margin.h) / 2) + " 0" + " " +
+                      "L " +  (size.width - 2 * diamond_margin.h) + " " +
+                              ((size.height - 2 * diamond_margin.v) / 2) + " " +
+                      "L " +  ((size.width - 2 * diamond_margin.h) / 2) + " " +
+                              (size.height - 2 * diamond_margin.v) + " z")
+            .attr("fill", "gold");
 
-        _g2.append("circle")
-           .attr("cx", size.width / 2)
-           .attr("cy", size.height / 2)
-           .attr("r", 100)
-           .attr("fill", "blue");
+      //draw blue circle
+      _g2.append("circle")
+         .attr("cx", size.width/2)
+         .attr("cy", size.height/2)
+         .attr("r", 95)
+         .attr("fill", "darkblue");
 
-        _g2.append("text")
-           .attr("x", (size.width / 2) + 40)
-           .attr("y", (size.height / 2) - 30)
-           .attr("font-size", 20)
-           .html("&#x2605;")
-           .attr("fill", "white");
+      //draw white band
+      _g2.append("defs")
+          .append("clipPath")
+          .attr("id", "circle")
+          .append("circle")
+          .attr("cx", size.width /2)
+          .attr("cy", size.height / 2)
+          .attr("r", radius);
 
-        function genStars( ){
-            var array = new Array( );
-            var str = "";
+      _g2.append("path")
+         .attr("d", pathBand(-50, size.height + 60, size.width - 90, size.height + 60, 15))
+         .attr("fill", "white")
+         .attr("clip-path", "url(#circle)");
 
-            for(var i = 0; i < 5; i++){
-                for(var j = 0; j < 10; j++){
-                  str += "&#x2605;         ";
-                }
+      //draw 'ordem e progresso' tag on white band
+      _g2.append("defs")
+         .append("path")
+         .attr("id", "band")
+         .attr("d", "M210 145 Q 325 140 400 210");
 
-                array.push([i, str]);
-                str = "";
-            }
+      _g2.append("text")
+         .attr("font-family", "Sans-Serif")
+         .attr("font-size", 16)
+         .append("textPath")
+         .attr("xlink:href", "#band")
+         .attr("fill", "forestgreen")
+         .attr("startOffset", 7)
+         .text("ORDEM  E  PROGRESSO");
 
-            return array;
-        }
+      //draw a single star
+      _g2.append("path")
+         .attr("transform", "translate(" + (size.width/2 + 30) + "," + (size.height/2 - 35) + ")")
+         .attr("d", d3.symbol( ).type(d3.symbolStar))
+         .attr("fill", "white")
 
-        function getColor(c){
-            if(c == 0)
-              return "red";
+      //auxiliary functions
+      // --------------------------------------------------------
 
-            return "white";
-        }
+      //creates band path string
+      function pathBand(x1, y1, x2, y2, r){
+          var path = "M " + x1 + " " + y1 + " " +
+                     "A 45 45, 0, 0, 1 " +
+                     x2 + " " + y2 + " " +
+                     "L " + (x2 - r) + " " + y2 + " " +
+                     "A 45 45, 0, 1, 0 " +
+                     (x1 + r) + " " + y1 + " z";
+
+          return path;
+      }
+
+      //creates stars auxiliary dataset
+      function genStars( ){
+          var token = 1;
+          var array = new Array( );
+
+          for(var j = 0; j < 9; j++){
+              for(var w = 0; w < 11; w++){
+                array.push([j, w, token]);
+                token = 1 - token;
+              }
+          }
+
+          return array;
+      }
+
+      //creates bars auxiliary dataset
+      function genBars( ){
+          var array = new Array( );
+          var token = 1;
+
+          for(var i = 0; i < 13; i++){
+              array.push([i, token]);
+              token = 1 - token;
+          }
+
+          return array;
+      }
+
+      //returns color according token
+      function getColor(c1, c2, d){
+          if(d == 1)
+            return c1;
+
+          return c2;
+      }
+
       </script>
     </body>
 </html>
