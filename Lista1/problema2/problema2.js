@@ -84,7 +84,8 @@ function scatterPlot( ){
    //adding text on top side of the plot
    _svg.append("text")
       .attr("id", "title")
-      .attr("x", ((width + 2 * margin.horizontal) / 2) - 10)
+      .attr("text-anchor", "middle")
+      .attr("x", ((width + 2 * margin.horizontal) / 2))
       .attr("y", margin.vertical / 2)
       .attr("font-family", "Verdana")
       .attr("font-size", 20)
