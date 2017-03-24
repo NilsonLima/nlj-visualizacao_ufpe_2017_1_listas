@@ -1,5 +1,5 @@
 //global variables
-var margin = {top: 90, bottom: 80, right: 20, left: 90};
+var margin = {top: 90, bottom: 80, right: 20, left: 100};
 
 var width = 680 - margin.right - margin.left;
 var height = 620 - margin.top - margin.bottom;
@@ -50,7 +50,7 @@ var _svg = d3.select("body")
     //upper legend
     _svg.append("text")
         .attr("text-anchor", "middle")
-        .attr("x", (width + margin.left + margin.right) / 2)
+        .attr("x", (width + 2 * margin.left) / 2)
         .attr("y", (margin.top / 2.5))
         .attr("class", "legend")
         .text("São Paulo, Annual Temperature");
@@ -72,7 +72,7 @@ var _svg = d3.select("body")
         .data([0, 1, 2])
         .enter( )
         .append("path")
-        .attr("d", function(d){ return "M 0 " + (d * 16) + " L 30 " + (d * 16) ; })
+        .attr("d", function(d){ return "M 0 " + (d * 20) + " L 30 " + (d * 20) ; })
         .attr("fill", "transparent")
         .attr("stroke", function(d) { return climate.colors[d]; })
         .attr("stroke-width", "3")
@@ -87,7 +87,7 @@ var _svg = d3.select("body")
         .enter( )
         .append("text")
         .attr("x", 0)
-        .attr("y", function(d, i){ return (i * 16); })
+        .attr("y", function(d, i){ return (i * 20); })
         .attr("class", "legend")
         .style("font-size", "16px")
         .text(function(d){ return d; });
