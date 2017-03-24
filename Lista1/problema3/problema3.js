@@ -1,8 +1,8 @@
 //global variables
 var margin = {top: 90, bottom: 80, right: 20, left: 90};
 
-var width = 600 - margin.right - margin.left;
-var height = 540 - margin.top - margin.bottom;
+var width = 680 - margin.right - margin.left;
+var height = 620 - margin.top - margin.bottom;
 var xpadding = 20;
 
 var climate = new Climate( ); //instantiates climate dataset object
@@ -46,19 +46,52 @@ var _svg = d3.select("body")
         .attr("transform", "translate(" + margin.left + "," + (margin.top - 1) + ")")
         .call(xAxis);
 
-    //adding legends
+    //adding legends...
+    //upper legend
     _svg.append("text")
         .attr("text-anchor", "middle")
         .attr("x", (width + margin.left + margin.right) / 2)
-        .attr("y", (margin.top / 2))
+        .attr("y", (margin.top / 2.5))
         .attr("class", "legend")
         .text("São Paulo, Annual Temperature");
 
+    //left side legend
     _svg.append("text")
-        .attr("transform", "rotate(-90," + ((height + margin.top + margin.bottom) / 2) + "," + (margin.left / 2) + ")")
+        .attr("transform", "rotate(-90," + (margin.left / 2.5) + "," + ((height + margin.top + margin.bottom) / 2) + ")")
+        .attr("x", (margin.left / 2))
+        .attr("y", ((height + margin.top + margin.bottom) / 2))
         .attr("text-anchor", "middle")
         .attr("class", "legend")
         .text("Temp deg C");
+
+    //bottom legend lines
+    _svg.append("g")
+        .attr("transform", "translate(" + (((width + margin.left + margin.right)/2) - 100) + "," +
+                                          ((height + margin.top + 15) + ")"))
+        .selectAll("path")
+        .data([0, 1, 2])
+        .enter( )
+        .append("path")
+        .attr("d", function(d){ return "M 0 " + (d * 16) + " L 30 " + (d * 16) ; })
+        .attr("fill", "transparent")
+        .attr("stroke", function(d) { return climate.colors[d]; })
+        .attr("stroke-width", "3")
+        .attr("stroke-linecap", "round");
+
+    //bottom legend text
+    _svg.append("g")
+        .attr("transform", "translate(" + (((width + margin.left + margin.right)/2) - 60) + "," +
+                                          ((height + margin.top + 20) + ")"))
+        .selectAll("text")
+        .data(climate.labels)
+        .enter( )
+        .append("text")
+        .attr("x", 0)
+        .attr("y", function(d, i){ return (i * 16); })
+        .attr("class", "legend")
+        .style("font-size", "16px")
+        .text(function(d){ return d; });
+
 
 //creates a group object to display line chart
 var _g1 = _svg.append("g")
@@ -67,22 +100,25 @@ var _g1 = _svg.append("g")
     //display average high
     _g1.append("path")
        .attr("d", writePath(climate.hmean))
-       .attr("stroke", "darkred")
+       .attr("stroke", climate.colors[1])
        .attr("stroke-width", "3")
+       .attr("stroke-linecap", "round")
        .attr("fill", "transparent");
 
     //display daily average
     _g1.append("path")
        .attr("d", writePath(climate.mean))
-       .attr("stroke", "black")
+       .attr("stroke", climate.colors[0])
        .attr("stroke-width", "3")
+       .attr("stroke-linecap", "round")
        .attr("fill", "transparent");
 
     //display average low
     _g1.append("path")
        .attr("d", writePath(climate.lmean))
-       .attr("stroke", "steelblue")
+       .attr("stroke", climate.colors[2])
        .attr("stroke-width", "3")
+       .attr("stroke-linecap", "round")
        .attr("fill", "transparent");
 
 

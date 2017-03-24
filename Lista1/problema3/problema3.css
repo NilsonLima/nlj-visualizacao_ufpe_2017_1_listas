@@ -6,12 +6,22 @@
   stroke: transparent;
 }
 
+.yAxis text{
+  font-family: sans-serif;
+  font-size: 12px;
+}
+
 .xAxis line{
   stroke: transparent;
 }
 
 .xAxis path{
   stroke: transparent;
+}
+
+.xAxis text{
+  font-family: sans-serif;
+  font-size: 14px;
 }
 
 .legend {
