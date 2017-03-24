@@ -1,5 +1,5 @@
 //global variables
-var margin = {top: 60, bottom: 80, right: 20, left: 50};
+var margin = {top: 90, bottom: 80, right: 20, left: 90};
 
 var width = 600 - margin.right - margin.left;
 var height = 540 - margin.top - margin.bottom;
@@ -13,7 +13,7 @@ var xScale = d3.scaleTime( )
                 .range([0, width]);
 
 var yScale = d3.scaleLinear( )
-               .domain([minMax("min"), minMax("max")])
+               .domain([minMax("min") - 2, minMax("max") + 2])
                .range([height, 0]);
 
 //define x and y axis
@@ -45,6 +45,20 @@ var _svg = d3.select("body")
         .attr("class", "xAxis")
         .attr("transform", "translate(" + margin.left + "," + (margin.top - 1) + ")")
         .call(xAxis);
+
+    //adding legends
+    _svg.append("text")
+        .attr("text-anchor", "middle")
+        .attr("x", (width + margin.left + margin.right) / 2)
+        .attr("y", (margin.top / 2))
+        .attr("class", "legend")
+        .text("São Paulo, Annual Temperature");
+
+    _svg.append("text")
+        .attr("transform", "rotate(-90," + ((height + margin.top + margin.bottom) / 2) + "," + (margin.left / 2) + ")")
+        .attr("text-anchor", "middle")
+        .attr("class", "legend")
+        .text("Temp deg C");
 
 //creates a group object to display line chart
 var _g1 = _svg.append("g")

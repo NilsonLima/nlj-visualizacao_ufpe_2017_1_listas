@@ -3,13 +3,19 @@
 }
 
 .yAxis path{
-  stroke: white;
+  stroke: transparent;
 }
 
 .xAxis line{
-  stroke: white;
+  stroke: transparent;
 }
 
 .xAxis path{
-  stroke: white;
+  stroke: transparent;
+}
+
+.legend {
+  font-family: Comic;
+  font-size: 22px;
+  fill: gray;
 }
