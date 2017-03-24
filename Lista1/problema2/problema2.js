@@ -7,15 +7,15 @@ var dataset, npoints;
 //creates scales for x and y position, radius r and color from black to blue
 var xScale = d3.scaleLinear( )
                .domain([0, 100])
-               .rangeRound([rPadding, width - rPadding]);
+               .range([rPadding, width - rPadding]);
 
 var yScale = d3.scaleLinear( )
                .domain([0, 100])
-               .rangeRound([height - rPadding, rPadding]);
+               .range([height - rPadding, rPadding]);
 
 var rScale = d3.scaleLinear( )
                .domain([0, 100])
-               .rangeRound([3, 8]);
+               .range([3, 8]);
 
 var cScale = d3.scaleLinear( )
                .domain([0, 100])
