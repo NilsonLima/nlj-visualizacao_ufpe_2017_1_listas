@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<svg width="960" height="600"></svg>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script type="text/javascript" src="dataset.js"></script>
+<script type="text/javascript" src="problem2.js"></script>
+<script>
+    var svg = d3.select("svg");
+    var width = Number(svg.attr("width"));
+    var height = Number(svg.attr("height"));
+    var dataset = new Dataset( );
+
+    var plt = new ScatterPlot(width, height, dataset.points, svg);
+
+    plt.show();
+</script>
