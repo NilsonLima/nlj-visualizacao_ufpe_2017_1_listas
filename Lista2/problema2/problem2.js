@@ -26,6 +26,7 @@ class ScatterPlot {
     }
 
     show( ){
+        //test
         var that = this;
 
         this.canvas = this.container.append("g")
