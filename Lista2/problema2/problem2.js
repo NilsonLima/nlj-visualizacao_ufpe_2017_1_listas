@@ -1,6 +1,6 @@
 class ScatterPlot {
     constructor(width, height, container){
-        this.margin = {top: 15, left: 30, bottom: 30, right: 15};
+        this.margin = {top: 15, left: 45, bottom: 30, right: 15};
         this.pltWidth = width - this.margin.left - this.margin.right;
         this.pltHeight = height - this.margin.top - this.margin.bottom;
         this.container = container;
@@ -18,7 +18,7 @@ class ScatterPlot {
                       .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
 
         this.canvas.append("g")
-                   .attr("class", "brush");
+                      .attr("class", "brush");
     }
 
     imshow(dataset){
@@ -52,35 +52,37 @@ class ScatterPlot {
                .remove( );
 
         circles.enter( )
-               .merge(circles)
                .append("circle")
+               .merge(circles)
                .attr("cx", function(d){ return that.xScale(d[0]); })
                .attr("cy", function(d){ return that.yScale(d[1]); })
                .attr("fill", function(d){ return that.cScale(d[2]); })
                .attr("r", 3);
 
-        this.brush = d3.brush( ).on("end", function( ){ that.__brush(that); });
+        this.brush = d3.brush( )
+                       .on("end", function( ){ that.__brush( ); });
 
         this.container.select(".xAxis").call(this.xAxis);
         this.container.select(".yAxis").call(this.yAxis);
         this.container.select(".brush").call(this.brush);
     }
 
-    __brush(widget){
+    __brush( ){
+        var that = this;
         var s = d3.event.selection;
 
         if(s){
-          widget.xScale.domain([s[0][0], s[1][0]].map(widget.xScale.invert, widget.xScale))
-          widget.yScale.domain([s[1][1], s[0][1]].map(widget.yScale.invert, widget.yScale))
+          this.xScale.domain([s[0][0], s[1][0]].map(this.xScale.invert));
+          this.yScale.domain([s[1][1], s[0][1]].map(this.yScale.invert));
 
-          widget.container.select(".brush")
-                          .call(widget.brush.move, null);
+          this.container.select(".brush")
+                        .call(this.brush.move, null);
 
-          widget.__zoom( );
+          this.__zoom_in( );
         }
     }
 
-    __zoom( ){
+    __zoom_in( ){
         var that = this;
         var t = d3.transition( ).duration(750);
 
