@@ -8,17 +8,16 @@ class ScatterPlot {
         this.canvas = this.container.append("g")
                                     .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
 
+        this.canvas.append("g")
+                   .attr("class", "brush");
+
         this.container.append("g")
                       .attr("class", "xAxis")
                       .attr("transform", "translate(" + this.margin.left + "," +
                                                        (this.pltHeight + this.margin.top) + ")");
-
         this.container.append("g")
                       .attr("class", "yAxis")
                       .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
-
-        this.canvas.append("g")
-                      .attr("class", "brush");
     }
 
     imshow(dataset){
@@ -41,6 +40,13 @@ class ScatterPlot {
 
         this.yAxis = d3.axisLeft( )
                        .scale(this.yScale);
+
+        this.canvas.append("defs")
+                   .append("clipPath")
+                   .attr("id", "canvas")
+                   .append("rect")
+                   .attr("width", this.pltWidth)
+                   .attr("height", this.pltHeight);
     }
 
     show( ){
@@ -60,7 +66,8 @@ class ScatterPlot {
                .attr("r", 3);
 
         this.brush = d3.brush( )
-                       .on("end", function( ){ that.__brush( ); });
+                       .on("brush", function( ){ that.__brush( ); })
+                       .on("end", function( ){ that.__brush_end( ); });
 
         this.container.select(".xAxis").call(this.xAxis);
         this.container.select(".yAxis").call(this.yAxis);
@@ -72,10 +79,28 @@ class ScatterPlot {
         var s = d3.event.selection;
 
         if(s){
+            this.canvas.selectAll("circle")
+                       .attr("fill", function(d){
+                                        var x = that.xScale(d[0]);
+                                        var y = that.yScale(d[1]);
+
+                                        if(s[0][0] <= x && s[1][0] >= x && s[0][1] <= y && s[1][1] >= y){
+                                            return "red";
+                                        }
+
+                                        return that.cScale(d[2]);
+                                     });
+        }
+    }
+
+    __brush_end( ){
+        var s = d3.event.selection;
+
+        if(s){
           this.xScale.domain([s[0][0], s[1][0]].map(this.xScale.invert));
           this.yScale.domain([s[1][1], s[0][1]].map(this.yScale.invert));
 
-          this.container.select(".brush")
+          this.canvas.select(".brush")
                         .call(this.brush.move, null);
 
           this.__zoom_in( );
@@ -96,7 +121,9 @@ class ScatterPlot {
 
         this.container.selectAll("circle")
                       .transition(t)
+                      .attr("clip-path", "url(#canvas)")
                       .attr("cx", function(d){ return that.xScale(d[0]); })
-                      .attr("cy", function(d){ return that.yScale(d[1]); });
+                      .attr("cy", function(d){ return that.yScale(d[1]); })
+                      .attr("fill", function(d){ return that.cScale(d[2]); });
     }
 }
