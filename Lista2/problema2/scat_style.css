@@ -1,0 +1,9 @@
+.xAxis line,
+.xAxis path{
+  stroke: transparent;
+}
+
+.yAxis line,
+.yAxis path{
+  stroke: transparent;
+}

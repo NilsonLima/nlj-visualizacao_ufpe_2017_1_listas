@@ -1,17 +1,51 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<svg width="960" height="600"></svg>
+<link rel="stylesheet" href="scat_style.css">
+<svg width="960" height="400"></svg>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script type="text/javascript" src="dataset.js"></script>
 <script type="text/javascript" src="problem2.js"></script>
 <script>
+
     var svg = d3.select("svg");
-    var width = Number(svg.attr("width"));
-    var height = Number(svg.attr("height"));
+    var c1 = svg.append("g");
+    var c2 = svg.append("g");
+
     var dataset = getDataset( );
 
-    var plt = new ScatterPlot(width, height, svg);
-    plt.imshow(dataset)
-    plt.show( );
+    var plt1 = new ScatterPlot(0, 0, 480, 400, c1, "c1", std=false);
+    plt1.imshow(dataset);
+    plt1.show( );
+
+    var plt2 = new ScatterPlot(480, 0, 480, 400, c2, "c2", std=false);
+    plt2.imshow(dataset);
+    plt2.show( );
+
+    var dset = d3.dispatch("setSelection");
+    var dreset = d3.dispatch("resetSelection");
+
+    dset.on("setSelection", function( ){
+                                if(this.caller === "c1"){
+                                    plt2.setSelected(this.ids);
+                                }
+                                else{
+                                    plt1.setSelected(this.ids);
+                                }
+                             });
+
+    dreset.on("resetSelection", function( ){
+                                    if(this.caller === "c1"){
+                                        plt2.resetSelected(this.ids);
+                                    }
+                                    else{
+                                        plt1.resetSelected(this.ids);
+                                    }
+                                });
+
+    plt1.dset = dset;
+    plt2.dset = dset;
+
+    plt1.dreset = dreset;
+    plt2.dreset = dreset;
 
 </script>
