@@ -1,15 +1,18 @@
 class ScatterPlot {
-    constructor(x, y, width, height, container, id, std=true, zoom=false){
-        this.container = container;
-        this.std = std;
-        this.zoom = zoom;
-        this.id =  id;
-        this.x = x;
-        this.y = y;
+    constructor(dimensions, brushing, dispatch){
+        this.container = dimensions.container;
+        this.x = dimensions.x;
+        this.y = dimensions.y;
 
-        this.margin = {top: 15, left: 45, bottom: 30, right: 15};
-        this.pltWidth = width - this.margin.left - this.margin.right;
-        this.pltHeight = height - this.margin.top - this.margin.bottom;
+        this.std = brushing.std;
+        this.zoom = brushing.zoom;
+
+        this.id =  dispatch.id;
+        this.dflag = dispatch.flag;
+
+        this.margin = {top: 45, left: 45, bottom: 20, right: 15};
+        this.pltWidth = dimensions.width - this.margin.left - this.margin.right;
+        this.pltHeight = dimensions.height - this.margin.top - this.margin.bottom;
 
         this.container.append("g")
                       .attr("class", "xAxis")
@@ -23,7 +26,7 @@ class ScatterPlot {
 
         this.canvas = this.container.append("g")
                                     .attr("transform", "translate(" + (this.margin.left + this.x) + "," +
-                                                                      (this.margin.top + this.y) + ")");
+                                                                      (this.margin.top + this.y) + ")")
 
         if(!this.std){
             var that = this;
@@ -33,7 +36,7 @@ class ScatterPlot {
                            .on("start", function( ){ that.__brush_start( ); })
                            .on("brush", function( ){ that.__brush( ); });
 
-            if(this.zoom == "in"){
+            if(this.zoom){
                 this.brush.on("end", function( ){ that.__brush_end( ); });
 
                 this.canvas.append("defs")
@@ -87,7 +90,7 @@ class ScatterPlot {
         }
 
         if(mode.x){
-            this.xAxis.tickSizeInner(-tickx).tickPadding(10).ticks(5);
+            this.xAxis.tickSizeInner(-tickx).tickPadding(10).ticks(7);
             this.container.select(".xAxis").call(this.xAxis);
             this.container.select(".xAxis")
                           .selectAll("line")
@@ -98,7 +101,7 @@ class ScatterPlot {
         }
 
         if(mode.y){
-            this.yAxis.tickSizeInner(-ticky).tickPadding(10).ticks(5);
+            this.yAxis.tickSizeInner(-ticky).tickPadding(10).ticks(7);
             this.container.select(".yAxis").call(this.yAxis);
             this.container.select(".yAxis")
                           .selectAll("line")
@@ -126,6 +129,16 @@ class ScatterPlot {
         this.container.select(".brush").call(this.brush);
     }
 
+    legend(text){
+        this.container.append("text")
+                      .attr("id", "legend")
+                      .attr("x", this.x + ((this.pltWidth + this.margin.left + this.margin.right) / 2))
+                      .attr("y", this.margin.top / 2)
+                      .attr("text-anchor", "middle")
+                      .attr("font-family", "sans-serif")
+                      .text(text);
+    }
+
     setSelected(ids){
         var that = this;
 
@@ -147,6 +160,8 @@ class ScatterPlot {
                    .attr("fill", function(d){
                                     return that.cScale(d[2]);
                                  });
+
+        this.canvas.select(".brush").call(this.brush.move, null);
     }
 
     __brush_start( ){
@@ -155,7 +170,9 @@ class ScatterPlot {
         this.canvas.selectAll("circle")
                    .attr("fill", function(d){ return that.cScale(d[2]); });
 
-        this.dreset.call("resetSelection", {caller: this.id});
+        if(this.dflag){
+            this.dreset.call("resetSelection", {caller: this.id});
+        }
     }
 
     __brush( ){
@@ -178,7 +195,9 @@ class ScatterPlot {
                                          }
                                      });
 
-            this.dset.call("setSelection", {caller: this.id, ids: this.ids});
+            if(this.dflag){
+                this.dset.call("setSelection", {caller: this.id, ids: this.ids});
+            }
         }
     }
 
@@ -192,10 +211,9 @@ class ScatterPlot {
                                       return that.cScale(d[2]);
                                    });
 
-          this.canvas.select(".brush")
-                     .call(this.brush.move, null);
+          this.canvas.select(".brush").call(this.brush.move, null);
 
-          if(this.zoom == "in"){
+          if(this.zoom){
               this.__zoom_in(s);
           }
         }
