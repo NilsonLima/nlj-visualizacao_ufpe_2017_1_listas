@@ -1,6 +1,6 @@
 class ScatterPlot {
     constructor(dimensions, brushing, dispatch){
-        this.container = dimensions.container;
+        this.container = dimensions.container.append("g");
         this.x = dimensions.x;
         this.y = dimensions.y;
 
@@ -10,30 +10,34 @@ class ScatterPlot {
         this.id =  dispatch.id;
         this.dflag = dispatch.flag;
 
-        this.margin = {top: 45, left: 45, bottom: 20, right: 15};
+        this.margin = {top: 20, left: 35, bottom: 20, right: 15};
         this.pltWidth = dimensions.width - this.margin.left - this.margin.right;
         this.pltHeight = dimensions.height - this.margin.top - this.margin.bottom;
-
-        this.container.append("g")
-                      .attr("class", "xAxis")
-                      .attr("transform", "translate(" + (this.margin.left + this.x)+ "," +
-                                                        (this.pltHeight + this.margin.top + this.y) + ")");
 
         this.container.append("g")
                       .attr("class", "yAxis")
                       .attr("transform", "translate(" + (this.margin.left + this.x) + "," +
                                                         (this.margin.top + this.y) + ")");
 
+        this.container.append("g")
+                      .attr("class", "xAxis")
+                      .attr("transform", "translate(" + (this.margin.left + this.x)+ "," +
+                                                        (this.pltHeight + this.margin.top + this.y) + ")");
+
         this.canvas = this.container.append("g")
                                     .attr("transform", "translate(" + (this.margin.left + this.x) + "," +
-                                                                      (this.margin.top + this.y) + ")")
+                                                                      (this.margin.top + this.y) + ")");
+
+        this.canvas.append("rect")
+                   .attr("id", "background")
+                   .attr("width", this.pltWidth)
+                   .attr("height", this.pltHeight);
 
         if(!this.std){
             var that = this;
 
             this.canvas.append("g").attr("class", "brush");
             this.brush = d3.brush( )
-                           .on("start", function( ){ that.__brush_start( ); })
                            .on("brush", function( ){ that.__brush( ); });
 
             if(this.zoom){
@@ -77,7 +81,7 @@ class ScatterPlot {
 
     }
 
-    ax(mode, grid){
+    ax(enable, grid, format){
         var stroke_path = "transparent",
             stroke_line = "transparent";
         var tickx = 0,
@@ -89,8 +93,12 @@ class ScatterPlot {
             ticky = grid.ticky;
         }
 
-        if(mode.x){
-            this.xAxis.tickSizeInner(-tickx).tickPadding(10).ticks(7);
+        if(enable.x){
+            this.xAxis.tickSizeInner(-tickx)
+                      .tickPadding(10)
+                      .tickFormat(d3.format(format))
+                      .ticks(5);
+
             this.container.select(".xAxis").call(this.xAxis);
             this.container.select(".xAxis")
                           .selectAll("line")
@@ -100,8 +108,12 @@ class ScatterPlot {
                           .attr("stroke", stroke_path);
         }
 
-        if(mode.y){
-            this.yAxis.tickSizeInner(-ticky).tickPadding(10).ticks(7);
+        if(enable.y){
+            this.yAxis.tickSizeInner(-ticky)
+                      .tickPadding(10)
+                      .tickFormat(d3.format(format))
+                      .ticks(5);
+
             this.container.select(".yAxis").call(this.yAxis);
             this.container.select(".yAxis")
                           .selectAll("line")
@@ -117,6 +129,10 @@ class ScatterPlot {
         var circles = this.canvas.selectAll("circle")
                                  .data(this.dataset);
 
+        this.canvas.select("#background")
+                   .attr("stroke", "gray")
+                   .attr("fill", "transparent");
+
         circles.exit( ).remove( );
         circles.enter( )
                .append("circle")
@@ -126,14 +142,25 @@ class ScatterPlot {
                .attr("fill", function(d){ return that.cScale(d[2]); })
                .attr("r", 3);
 
-        this.container.select(".brush").call(this.brush);
+        this.container.select(".brush")
+                      .on("click", function( ){
+                                          if(d3.event.button == 0){
+                                              that.canvas.selectAll("circle")
+                                                         .attr("fill", function(d){ return that.cScale(d[2]); });
+
+                                              if(that.dflag){
+                                                  that.dreset.call("resetSelection", {caller: that.id});
+                                              }
+                                          }
+                                      })
+                      .call(this.brush);
     }
 
     legend(text){
         this.container.append("text")
                       .attr("id", "legend")
                       .attr("x", this.x + ((this.pltWidth + this.margin.left + this.margin.right) / 2))
-                      .attr("y", this.margin.top / 2)
+                      .attr("y", this.y + (this.margin.top / 2))
                       .attr("text-anchor", "middle")
                       .attr("font-family", "sans-serif")
                       .text(text);
@@ -162,17 +189,6 @@ class ScatterPlot {
                                  });
 
         this.canvas.select(".brush").call(this.brush.move, null);
-    }
-
-    __brush_start( ){
-        var that = this;
-
-        this.canvas.selectAll("circle")
-                   .attr("fill", function(d){ return that.cScale(d[2]); });
-
-        if(this.dflag){
-            this.dreset.call("resetSelection", {caller: this.id});
-        }
     }
 
     __brush( ){
