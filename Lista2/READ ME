@@ -1,0 +1,13 @@
+notas:
+	- Na terceira questão a quantidade de pontos no dataset é muito grande. São mais de 5000. 
+          Desenhar 25 gráficos e gerir eventos sobre eles tem custado bastante, pelo menos na minha máquina.
+	  A aplicação como um todo acaba tendo em torno de 140.000 pontos a serem pintados 
+	     em escala de cinza e multicor a cada movimento do brush. 
+          Sugiro diminuir a quantidade de pontos para uma vizualização mais leve.
+	  Para tal, basta modificar a variável "length" nas funções "twoby2" e "__transform__" para um valor desejável.
+	  Tais funções se encontram no arquivo "problema3/dataset.js".
+
+	- O arquivo "stat/scatterplot.js" refere-se a uma API que fiz que pudesse cubrir os cenários de todas as questões da lista.
+	  Não tive tempo de comentar, infelizmente. Espero que não esteja muito bagunçado para o seu entendimento.
+	  A idéia é aos poucos criar API's que possam dar suporte ao projeto final do curso.
+	  Qualquer dúvida manda um email.

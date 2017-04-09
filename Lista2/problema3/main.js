@@ -74,22 +74,8 @@ class Main{
         for(i = this.n - 1, w = 0; i >= 0; i--, w++){
             for(j = 0; j < this.n; j++){
                 this.matrix[w][j].imshow(this.dataset.twoby2(j, i));
-            }
-        }
-
-        for(i = 0; i < this.n; i++){
-            var g = {tickx : this.height - 30, ticky : this.width};
-            this.matrix[this.n - 1][i].ax({x: true, y: false}, g, ".0s");
-        }
-
-        for(i = 0; i < this.n; i++){
-            var g = {tickx : this.height - 30, ticky : this.width};
-            this.matrix[i][0].ax({x: false, y: true}, g, ".0s");
-        }
-
-        for(i = 0; i < this.n; i++){
-            for(j = 0; j < this.n; j++){
-                this.matrix[i][j].show( );
+                this.matrix[w][j].ax({x: true, y: true}, null, ".0s");
+                this.matrix[w][j].show( );
             }
         }
     }

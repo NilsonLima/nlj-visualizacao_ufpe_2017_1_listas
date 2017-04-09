@@ -10,7 +10,7 @@ class ScatterPlot {
         this.id =  dispatch.id;
         this.dflag = dispatch.flag;
 
-        this.margin = {top: 20, left: 35, bottom: 20, right: 15};
+        this.margin = {top: 20, left: 35, bottom: 30, right: 15};
         this.pltWidth = dimensions.width - this.margin.left - this.margin.right;
         this.pltHeight = dimensions.height - this.margin.top - this.margin.bottom;
 
