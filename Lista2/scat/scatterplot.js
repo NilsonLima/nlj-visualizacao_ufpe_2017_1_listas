@@ -66,8 +66,8 @@ class ScatterPlot {
                         .domain(d3.extent(this.dataset, function(d){ return d[1]; }))
                         .range([this.pltHeight, 0]);
 
-        this.gScale = d3.scaleLinear( )
-                        .domain(d3.extent(this.dataset, function(d){ return d[2]; }))
+        this.gScale = d3.scaleOrdinal( )
+                        .domain(Array.from(new Set(this.dataset.map(function(d){ return d[2]; }))))
                         .range([0, 1]);
 
         this.cScale = d3.scaleOrdinal( )
@@ -151,6 +151,8 @@ class ScatterPlot {
                                               if(that.dflag){
                                                   that.dreset.call("resetSelection", {caller: that.id});
                                               }
+
+                                              this.ids = [];
                                           }
                                       })
                       .call(this.brush);
@@ -164,6 +166,38 @@ class ScatterPlot {
                       .attr("text-anchor", "middle")
                       .attr("font-family", "sans-serif")
                       .text(text);
+    }
+
+    setSelectedHist(ids, on){
+        var that = this;
+
+        this.canvas.selectAll("circle")
+                   .attr("fill", function(d, i){
+                                    var c = that.cScale(d[2]);
+
+                                    if(ids.indexOf(i) != -1){
+                                        if(!on)
+                                            c = "transparent";
+
+                                        return c;
+                                    }
+                                    else{
+                                        if(that.ids != null){
+                                            if(that.ids.length != 0){
+                                                if(d3.select(this).attr("fill") == "transparent")
+                                                    c = "transparent";
+                                            }
+                                        }
+                                        else{
+
+                                            if(d3.select(this).attr("fill") == "transparent")
+                                                c = "transparent";
+                                        }
+
+                                        return c;
+                                    }
+                                 });
+
     }
 
     setSelected(ids){
