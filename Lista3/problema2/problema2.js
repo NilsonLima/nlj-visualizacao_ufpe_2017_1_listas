@@ -59,7 +59,7 @@ class Treemap{
 
         for(var i = 0; i < this.orgaos.length; i++){
             var value = data.filter(function(d){ return d.orgao_nome == that.orgaos[i]; })
-                            .map(function(d){ var val = +d.valor_liquidado; if(!val) val = 0; return val; })
+                            .map(function(d){ var val = +d.valor_pago; if(!val) val = 0; return val; })
                             .reduce(function(a, b){ return a + b; }, 0);
 
             obj.push({"id": "RECIFE." + this.orgaos[i], "value": value});

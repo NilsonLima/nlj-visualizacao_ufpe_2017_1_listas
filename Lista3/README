@@ -19,6 +19,8 @@ sudo pip install pandas
 python preprocessing.py
 
 Por se tratar de um arquivo pesado, o código demora um tempo para dispor os retângulos na tela.
+A secretaria de educação possui uma despesa muito grande, devido a isso outros tiles como secretaria de combate ao crack e outras drogas
+ficam minúsculas. Para ajudar a visualização, basta pôr o mouse em cima do tile para um tooltip indicar a secretaria e o respectivo gasto.
 
 
 
