@@ -57,7 +57,7 @@ class ForceGraph{
         this.simulation.force("link")
                        .links(this.graph.links);
 
-        this.simulation.alpha(0.9).restart( );
+        this.simulation.alpha(0.3).restart( );
 
     }
 
@@ -72,7 +72,7 @@ class ForceGraph{
                     arr.push([that.__euclidean__(iris[i], iris[j]), j])
             }
 
-            arr.sort(function(a, b){ return a[0] > b[0]; });
+            arr.sort(function(a, b){ return a[0] - b[0]; });
             nodes.push({"id": i, "group": iris[i].species});
 
             for(var w = 0; w < n; w++){
@@ -137,12 +137,12 @@ class ForceGraph{
 
     __legend__( ){
         var that = this;
-        var margin = {top: 50, left: 100};
+        var margin = {top: 15, left: 20};
         var species = Array.from(new Set(iris.map(function(d){ return d.species; })));
 
         var legend = this.canvas.append("g")
-                                .attr("transform", "translate(" + (this.width - margin.left) + ","
-                                                                + (this.height - margin.top) + ")");
+                                .attr("transform", "translate(" + margin.left + ","
+                                                                + margin.top + ")");
 
         legend.append("g")
               .selectAll("circle")
