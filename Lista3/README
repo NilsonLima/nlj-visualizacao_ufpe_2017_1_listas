@@ -1,0 +1,31 @@
+Notas:
+
+1 QUESTÃO
+Não precisa de servidor local para rodar o código. Basta abri-lo normalmente no navegador.
+
+
+
+	
+2 QUESTÃO
+Devido ao fato dos nomes dos orgãos conterem acentuação, foi necessário utilizar a codificação UTF-8 para correta execução do código.
+Para habilitar essa codificação no servidor local, basta rodar o seguinte comando no terminal:
+
+python -c "import SimpleHTTPServer; m = SimpleHTTPServer.SimpleHTTPRequestHandler.extensions_map; m[''] = 'text/plain'; m.update(dict([(k, v + ';charset=UTF-8') for k, v in m.items()])); SimpleHTTPServer.test();"
+
+O arquivo CSV em questão está separado por ";". O javascript não lida bem com isso. Daí resolvi aplicar um pré-processamento no arquivo antes de utiliza-lo. Não vou subir o arquivo já que ele é mt pesado. O arquivo "preprocessing.py" faz essa tarefa de consertar o csv.
+Para executa-lo, siga os comandos abaixo no terminal:
+
+sudo pip install pandas
+python preprocessing.py
+
+Por se tratar de um arquivo pesado, o código demora um tempo para dispor os retângulos na tela.
+
+
+
+
+3 QUESTÃO
+Dois clicks no botão esquerdo do mouse dão zoom in e um click no botão direito dá zoom out para escala original.
+Para executar o código basta rodar um SimpleHTTPServer.
+
+python -m SimpleHTTPServer
+
