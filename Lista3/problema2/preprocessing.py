@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 
 def main( ):
     with open("recife-dados-despesas-2015.csv", "r+", encoding='utf-8') as f:

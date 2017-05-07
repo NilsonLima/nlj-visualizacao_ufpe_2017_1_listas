@@ -14,6 +14,8 @@ class Treemap{
         this.cScale = d3.scaleOrdinal( )
                         .range(d3.schemeCategory20.map(function(d){ d = d3.rgb(d); d.opacity = 0.7; return d; }))
 
+        this.format = d3.format(",.2f");
+
         this.__orgaos__( );
     }
 
@@ -26,10 +28,9 @@ class Treemap{
             var obj = that.__pre_process__(data);
             var root = that.stratify(obj)
                            .sum(function(d){ return d.value; })
-                           .sort(function(a, b){ b.height - a.height || b.value - a.value; });
+                           .sort(function(a, b){ return b.height - a.height || b.value - a.value; });
 
             that.treemap(root);
-            console.log(root.leaves( ))
 
             d3.select("body")
               .selectAll(".node")
@@ -37,7 +38,7 @@ class Treemap{
               .enter( )
               .append("div")
               .attr("class", "node")
-              .attr("title", function(d){ return d.id + "\n" + d.value; })
+              .attr("title", function(d){ return d.id + "\n" + that.format(d.value); })
               .style("left", function(d){ return d.x0 + "px"; })
               .style("top", function(d){ return d.y0 + "px"; })
               .style("width", function(d){ return (d.x1 - d.x0) + "px"; })
@@ -48,7 +49,7 @@ class Treemap{
               .text(function(d){ return d.id.substring(d.id.lastIndexOf(".") + 1)})
               .append("div")
               .attr("class", "node-value")
-              .text(function(d){ return d3.format(",.2f")(d.value); })
+              .text(function(d){ return that.format(d.value); })
         });
     }
 
@@ -58,14 +59,13 @@ class Treemap{
 
         for(var i = 0; i < this.orgaos.length; i++){
             var value = data.filter(function(d){ return d.orgao_nome == that.orgaos[i]; })
-                            .map(function(d){ var val = +d.valor_pago; if(!val) val = 0; return val; })
+                            .map(function(d){ var val = +d.valor_liquidado; if(!val) val = 0; return val; })
                             .reduce(function(a, b){ return a + b; }, 0);
 
             obj.push({"id": "RECIFE." + this.orgaos[i], "value": value});
         }
 
-        console.log(data.filter(function(d){ return d.orgao_nome == "SECRETARIA DE ENFRENTAMENTO AO CRACK E OUTRAS DROGAS"; })
-                        .map(function(d){ return d.valor_pago; }))
+        console.log(obj.map((d) => { return d.value;} ))
 
         return obj;
     }
