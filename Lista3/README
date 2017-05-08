@@ -21,6 +21,9 @@ python preprocessing.py
 Por se tratar de um arquivo pesado, o código demora um tempo para dispor os retângulos na tela.
 A secretaria de educação possui uma despesa muito grande, devido a isso outros tiles como secretaria de combate ao crack e outras drogas
 ficam minúsculas. Para ajudar a visualização, basta pôr o mouse em cima do tile para um tooltip indicar a secretaria e o respectivo gasto.
+Na questão a hierarquia é Recife-Orgão-Unidade. Entretanto cada orgão tem somente uma unidade que é identificada pelo nome
+<nome da secretaria> - ADMINSTRAÇÃO DIRETA. Resolvi não adicionar esse detalhe no treemap já que seria redundante.
+Portanto cada folha da árvore representa cada um dos 10 orgãos pedidos na questão.
 
 
 
